@@ -28,7 +28,7 @@
 		qcom,mdss-dsi-h-pulse-width = <8>;
 		qcom,mdss-dsi-h-sync-skew = <0>;
 		qcom,mdss-dsi-v-back-porch = <4>;
-		qcom,mdss-dsi-v-front-porch = <8>;
+		qcom,mdss-dsi-v-front-porch = <1>;
 		qcom,mdss-dsi-v-pulse-width = <4>;
 		qcom,mdss-dsi-h-left-border = <0>;
 		qcom,mdss-dsi-h-right-border = <0>;
@@ -1003,7 +1003,6 @@
 				00 02 45 00 00 00 00 01 97];
 		somc,mdss-dsi-disp-on-in-hs = <1>;
 		somc,mdss-dsi-wait-time-before-on-cmd = <120>;
-		somc,mdss-dsi-init-from-begin = <1>;
 		qcom,mdss-brightness-max-level = <255>;
 		somc,disp-en-off-pre = <10>;
 		somc,disp-en-off-post = <10>;
