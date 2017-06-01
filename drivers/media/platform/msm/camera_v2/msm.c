@@ -1,5 +1,5 @@
 /* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
- * Copyright (C) 2014 Sony Mobile Communications AB.
+ * Copyright (C) 2014 Sony Mobile Communications Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -720,13 +720,8 @@ int msm_post_event(struct v4l2_event *event, int timeout)
 
 	if (timeout < 0) {
 		mutex_unlock(&session->lock);
-#if defined(CONFIG_SONY_CAM_V4L2)
-		pr_debug("%s : timeout cannot be negative Line %d\n",
-				__func__, __LINE__);
-#else
 		pr_err("%s : timeout cannot be negative Line %d\n",
 				__func__, __LINE__);
-#endif
 		return rc;
 	}
 
