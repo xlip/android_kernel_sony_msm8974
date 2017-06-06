@@ -203,7 +203,7 @@ static struct wcd9xxx_mbhc_config mbhc_cfg = {
 	.micbias_enable_flags = 1 << MBHC_MICBIAS_ENABLE_THRESHOLD_HEADSET,
 	.insert_detect = true,
 	.swap_gnd_mic = NULL,
-#ifdef CONFIG_MACH_SONY_SHINANO
+#if defined (CONFIG_MACH_SONY_SHINANO) || defined (CONFIG_MACH_SONY_RHINE)
 	.cs_enable_flags = 0,
 #else
 	.cs_enable_flags = (1 << MBHC_CS_ENABLE_POLLING |
@@ -214,7 +214,9 @@ static struct wcd9xxx_mbhc_config mbhc_cfg = {
 	.do_recalibration = true,
 	.use_vddio_meas = true,
 	.enable_anc_mic_detect = false,
+#ifdef CONFIG_MACH_SONY_SHINANO
 	.hw_jack_type = SIX_POLE_JACK,
+#endif
 };
 
 struct msm_auxpcm_gpio {
@@ -768,16 +770,6 @@ static const struct snd_soc_dapm_widget msm8974_dapm_widgets[] = {
 
 	SND_SOC_DAPM_SUPPLY("MCLK",  SND_SOC_NOPM, 0, 0,
 	msm8974_mclk_event, SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
-
-#ifdef CONFIG_MACH_SONY_RHINE
-	SND_SOC_DAPM_SPK("Lineout_1 amp", msm_ext_spkramp_event),
-	SND_SOC_DAPM_SPK("Lineout_3 amp", msm_ext_spkramp_event),
-
-	SND_SOC_DAPM_SPK("Lineout_2 amp", msm_ext_spkramp_event),
-	SND_SOC_DAPM_SPK("Lineout_4 amp", msm_ext_spkramp_event),
-	SND_SOC_DAPM_SPK("SPK_ultrasound amp",
-					 msm_ext_spkramp_ultrasound_event),
-#endif
 
 	SND_SOC_DAPM_SPK("Ext Spk Bottom Pos", msm_ext_spkramp_event),
 	SND_SOC_DAPM_SPK("Ext Spk Bottom Neg", msm_ext_spkramp_event),
@@ -1906,8 +1898,13 @@ void *def_taiko_mbhc_cal(void)
 	S(t_ins_retry, 200);
 #undef S
 #define S(X, Y) ((WCD9XXX_MBHC_CAL_PLUG_TYPE_PTR(taiko_cal)->X) = (Y))
-	S(v_no_mic, 50);
-	S(v_hs_max, 2550);
+#ifdef CONFIG_MACH_SONY_RHINE
+	S(v_no_mic, 900);
+	S(v_hs_max, 2600);
+#else
+  	S(v_no_mic, 50);
+  	S(v_hs_max, 2550);
+#endif
 #undef S
 #define S(X, Y) ((WCD9XXX_MBHC_CAL_BTN_DET_PTR(taiko_cal)->X) = (Y))
 	S(c[0], 62);
@@ -1926,6 +1923,15 @@ void *def_taiko_mbhc_cal(void)
 	btn_high = wcd9xxx_mbhc_cal_btn_det_mp(btn_cfg,
 					       MBHC_BTN_DET_V_BTN_HIGH);
 	btn_low[0] = -30;
+#ifdef CONFIG_MACH_SONY_RHINE
+	btn_high[0] = 887;
+	btn_low[1] = 888;
+	btn_high[1] = 1009;
+	btn_low[2] = 1010;
+	btn_high[2] = 1189;
+	btn_low[3] = 1190;
+	btn_high[3] = 1411;
+#else
 	btn_high[0] = 50;
 	btn_low[1] = 51;
 	btn_high[1] = 336;
@@ -1933,6 +1939,7 @@ void *def_taiko_mbhc_cal(void)
 	btn_high[2] = 680;
 	btn_low[3] = 681;
 	btn_high[3] = 1207;
+#endif
 	n_ready = wcd9xxx_mbhc_cal_btn_det_mp(btn_cfg, MBHC_BTN_DET_N_READY);
 	n_ready[0] = 80;
 	n_ready[1] = 68;
